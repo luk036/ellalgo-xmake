@@ -2,7 +2,6 @@ add_rules("mode.debug", "mode.release", "mode.coverage")
 add_requires("conan::fmt/8.1.1", {alias = "fmt"})
 add_requires("conan::doctest/2.4.8", {alias = "doctest"})
 add_requires("conan::xtensor/0.23.10", {alias = "xtensor"})
-add_requires("conan::range-v3/0.11.0", {alias = "range-v3"})
 
 set_languages("c++20")
 
@@ -10,7 +9,7 @@ target("EllAlgo")
     set_kind("static")
     add_includedirs("include", {public = true})
     add_files("src/*.cpp")
-    add_packages("xtensor", "range-v3")
+    add_packages("xtensor")
     if is_plat("linux") then
         add_cxflags("-fconcepts", {force = true})
     elseif is_plat("windows") then
@@ -22,7 +21,7 @@ target("test")
     add_deps("EllAlgo")
     add_includedirs("include", {public = true})
     add_files("tests/*.cpp")
-    add_packages("fmt", "doctest", "xtensor", "range-v3")
+    add_packages("fmt", "doctest", "xtensor")
     if is_plat("linux") then
         add_cxflags("-fconcepts", {force = true})
     elseif is_plat("windows") then
