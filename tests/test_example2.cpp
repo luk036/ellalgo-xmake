@@ -48,5 +48,6 @@ TEST_CASE("Example 2, test feasible") {
     const auto [feasible, _niter, _status] = cutting_plane_feas(oracle, ell, options);
     static_assert(sizeof _niter >= 0, "make compiler happy");
     static_assert(sizeof _status >= 0, "make compiler happy");
-    assert(feasible);
+    const auto f1 = feasible; // make clang compiler happy
+    CHECK(f1);
 }

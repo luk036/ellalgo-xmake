@@ -55,9 +55,10 @@ TEST_CASE("Example 1, test feasible") {
     auto t = -1.0e100;  // std::numeric_limits<double>::min()
     const auto options = Options{2000, 1e-10};
     const auto [x_opt, _niter, _status] = cutting_plane_optim(oracle, ell, t, options);
+    const auto x1 = x_opt; // make clang compiler happy
     static_assert(sizeof _niter >= 0, "make compiler happy");
     static_assert(sizeof _status >= 0, "make compiler happy");
-    CHECK(x_opt);
+    CHECK(x1);
     const auto x = *x_opt;
     CHECK(x[0] >= 0.0);
 }
@@ -70,8 +71,10 @@ TEST_CASE("Example 1, test infeasible1") {
     const auto options = Options{2000, 1e-12};
     const auto [x_opt, _niter, status] = cutting_plane_optim(oracle, ell, t, options);
     static_assert(sizeof _niter >= 0, "make compiler happy");
-    CHECK(!x_opt);
-    CHECK(status == CutStatus::NoSoln);  // no sol'n
+    const auto x1 = x_opt; // make clang compiler happy
+    const auto s1 = status; // make clang compiler happy
+    CHECK(!x1);
+    CHECK(s1 == CutStatus::NoSoln);  // no sol'n
 }
 
 TEST_CASE("Example 1, test infeasible22") {
@@ -82,6 +85,8 @@ TEST_CASE("Example 1, test infeasible22") {
     const auto options = Options{2000, 1e-12};
     const auto [x_opt, _niter, status] = cutting_plane_optim(oracle, ell, t, options);
     static_assert(sizeof _niter >= 0, "make compiler happy");
-    CHECK(!x_opt);
-    CHECK(status == CutStatus::NoSoln);  // no sol'n
+    const auto x1 = x_opt; // make clang compiler happy
+    const auto s1 = status; // make clang compiler happy
+    CHECK(!x1);
+    CHECK(s1 == CutStatus::NoSoln);  // no sol'n
 }
