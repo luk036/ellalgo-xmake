@@ -1,8 +1,8 @@
 add_rules("mode.debug", "mode.release", "mode.coverage")
-add_requires("conan::fmt/8.1.1", {alias = "fmt"})
-add_requires("conan::doctest/2.4.8", {alias = "doctest"})
-add_requires("conan::xtensor/0.23.10", {alias = "xtensor"})
-add_requires("conan::range-v3/0.11.0", {alias = "range-v3"})
+add_requires("fmt", {alias = "fmt"})
+add_requires("doctest", {alias = "doctest"})
+add_requires("xtensor", {alias = "xtensor"})
+add_requires("range-v3", {alias = "range-v3"})
 
 set_languages("c++20")
 
@@ -14,7 +14,7 @@ target("EllAlgo")
     if is_plat("linux") then
         add_cxflags("-fconcepts", {force = true})
     elseif is_plat("windows") then
-        add_cxflags("/W4 /WX /wd4819", {force = true})
+        add_cxflags("/W4 /WX /wd4819 /wd4127", {force = true})
     end
 
 target("test")
@@ -26,7 +26,7 @@ target("test")
     if is_plat("linux") then
         add_cxflags("-fconcepts", {force = true})
     elseif is_plat("windows") then
-        add_cxflags("/W4 /WX /wd4819", {force = true})
+        add_cxflags("/W4 /WX /wd4819 /wd4127", {force = true})
     end
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
