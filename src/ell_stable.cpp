@@ -90,7 +90,7 @@ auto EllStable::update_single(const Arr1& grad, const double& beta)
     for (auto i = this->n - 1; i != 0; --i) {
         // backward subsituition
         for (auto j : py::range(i, this->n)) {
-            mq_g[i - 1] -= this->mq[{i, j}] * mq_g[j];  // ???
+            mq_g[i - 1] -= this->mq[{i, j}] * mq_g[j];  // TODO
         }
     }
     // calculate xc: n
@@ -175,7 +175,7 @@ auto EllStable::update_parallel(const Arr1& grad,
     for (auto i = this->n - 1; i != 0; --i) {
         // backward subsituition
         for (auto j : py::range(i, this->n)) {
-            mq_g[i - 1] -= this->mq[{i, j}] * mq_g[j];  // ???
+            mq_g[i - 1] -= this->mq[{i, j}] * mq_g[j];  // TODO
         }
     }
     this->xc_ -= (this->helper.rho / omega) * mq_g;  // n

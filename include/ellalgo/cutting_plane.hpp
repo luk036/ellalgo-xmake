@@ -72,7 +72,7 @@ auto cutting_plane_optim(Oracle& omega, Space& ss, double& t, const Options& opt
         const auto [cut, shrunk] = omega.assess_optim(ss.xc(), t);  // query the oracle at &ss.xc()
         if (shrunk) {
             // best t obtained
-            x_best = ss.xc();  // ???
+            x_best = ss.xc();  // TODO
             status = CutStatus::Success;
         }
         const auto [cutstatus, tsq] = ss.update(cut);  // update ss
