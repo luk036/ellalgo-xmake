@@ -47,7 +47,7 @@ struct MyOracle {
         }
         return {{Arr1{-1.0, -1.0}, fj3}, false};
     }
-} __attribute__((aligned(0)));
+};
 
 TEST_CASE("Example 1, test feasible") {
     auto ell = Ell(Arr1{10.0, 10.0}, Arr1{0.0, 0.0});
