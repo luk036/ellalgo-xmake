@@ -1,9 +1,12 @@
 #pragma once
 
-#include <concepts>
 #include <cstddef>
 #include <optional>  // for optional
 #include <utility>   // for pair
+
+// #include <concepts>
+#include <concepts/concepts.hpp> // use range-v3 concepts
+namespace STD_ALT = concepts;
 
 /**
  * @brief Options
@@ -54,7 +57,7 @@ template <class Oracle>
 concept OracleFeas = requires(Oracle omega, const ArrayType<Oracle>& x) {
     typename Oracle::ArrayType;   // double for 1D; ndarray::Arr1 for general
     typename Oracle::CutChoices;  // double for single cut; (double, Option<double) for parallel cut
-    { omega.assess_feas(x) } -> std::convertible_to<std::optional<Cut<Oracle>>>;
+    { omega.assess_feas(x) } -> STD_ALT::convertible_to<std::optional<Cut<Oracle>>>;
 };
 
 /**
@@ -66,7 +69,7 @@ template <class Oracle>
 concept OracleOptim = requires(Oracle omega, const ArrayType<Oracle>& x, double& t) {
     typename Oracle::ArrayType;   // double for 1D; ndarray::Arr1 for general
     typename Oracle::CutChoices;  // double for single cut; (double, Option<double) for parallel cut
-    { omega.assess_optim(x, t) } -> std::convertible_to<std::pair<Cut<Oracle>, bool>>;
+    { omega.assess_optim(x, t) } -> STD_ALT::convertible_to<std::pair<Cut<Oracle>, bool>>;
 };
 
 /**
@@ -78,7 +81,7 @@ template <class Oracle>
 concept OracleQ = requires(Oracle omega, const ArrayType<Oracle>& x, double& t, bool retry) {
     typename Oracle::ArrayType;   // double for 1D; ndarray::Arr1 for general
     typename Oracle::CutChoices;  // double for single cut; (double, Option<double) for parallel cut
-    { omega.assess_q(x, t, retry) } -> std::convertible_to<RetQ<Oracle>>;
+    { omega.assess_q(x, t, retry) } -> STD_ALT::convertible_to<RetQ<Oracle>>;
 };
 
 /**
@@ -88,7 +91,7 @@ concept OracleQ = requires(Oracle omega, const ArrayType<Oracle>& x, double& t, 
  */
 template <class Oracle>
 concept OracleBS = requires(Oracle omega, double& t) {
-    { omega.assess_bs(t) } -> std::convertible_to<bool>;
+    { omega.assess_bs(t) } -> STD_ALT::convertible_to<bool>;
 };
 
 /**
@@ -100,6 +103,6 @@ concept OracleBS = requires(Oracle omega, double& t) {
 template <class Space, typename T>
 concept SearchSpace = requires(Space ss, const std::pair<ArrayType<Space>, T>& cut) {
     typename Space::ArrayType;  // double for 1D; ndarray::Arr1 for general
-    { ss.xc() } -> std::convertible_to<ArrayType<Space>>;
-    { ss.update(cut) } -> std::convertible_to<std::pair<CutStatus, double>>;
+    { ss.xc() } -> STD_ALT::convertible_to<ArrayType<Space>>;
+    { ss.update(cut) } -> STD_ALT::convertible_to<std::pair<CutStatus, double>>;
 };
