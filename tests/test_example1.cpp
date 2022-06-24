@@ -1,4 +1,4 @@
-#include <doctest/doctest.h>  // for ResultBuilder, TestCase, CHECK
+#include <doctest/doctest.h>  // for ResultBuilder, TestCase, CHECK_EQ
 
 #include <ellalgo/cutting_plane.hpp>    // for cutting_plane_optim
 #include <ellalgo/ell.hpp>              // for ell
@@ -74,7 +74,7 @@ TEST_CASE("Example 1, test infeasible1") {
     const auto x1 = x_opt; // make clang compiler happy
     const auto s1 = status; // make clang compiler happy
     CHECK(!x1);
-    CHECK(s1 == CutStatus::NoSoln);  // no sol'n
+    CHECK_EQ(s1, CutStatus::NoSoln);  // no sol'n
 }
 
 TEST_CASE("Example 1, test infeasible22") {
@@ -88,5 +88,5 @@ TEST_CASE("Example 1, test infeasible22") {
     const auto x1 = x_opt; // make clang compiler happy
     const auto s1 = status; // make clang compiler happy
     CHECK(!x1);
-    CHECK(s1 == CutStatus::NoSoln);  // no sol'n
+    CHECK_EQ(s1, CutStatus::NoSoln);  // no sol'n
 }
