@@ -18,7 +18,7 @@ target("EllAlgo")
         add_cxflags("/W4 /WX /wd4819 /wd4127", {force = true})
     end
 
-target("test")
+target("test_ellalgo")
     set_kind("binary")
     add_deps("EllAlgo")
     add_includedirs("include", {public = true})
