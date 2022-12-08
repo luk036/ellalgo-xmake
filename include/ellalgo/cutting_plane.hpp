@@ -177,7 +177,7 @@ auto bsearch(Oracle& omega, std::pair<T, T>& intvl, const Options& options) -> C
         }
     }
     return {upper != u_orig, options.max_iter, CutStatus::NoSoln};
-};
+}
 
 // /**
 //  * @brief
