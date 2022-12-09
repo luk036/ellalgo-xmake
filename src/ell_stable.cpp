@@ -29,7 +29,7 @@ EllStable::EllStable(double kappa, Arr2 mq, Arr1 xc)
       kappa{kappa},
       mq{std::move(mq)},
       xc_{std::move(xc)},
-      helper(double(n)),
+      helper(n),
       no_defer_trick{false} {}
 
 /**
