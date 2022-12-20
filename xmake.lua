@@ -13,7 +13,7 @@ target("EllAlgo")
     add_files("src/*.cpp")
     add_packages("xtensor", "range-v3")
     if is_plat("linux") then
-        add_cxflags("-fconcepts", {force = true})
+        -- add_cxflags("-fconcepts", {force = true})
     elseif is_plat("windows") then
         add_cxflags("/W4 /WX /wd4819 /wd4127", {force = true})
     end
@@ -25,7 +25,7 @@ target("test_ellalgo")
     add_files("tests/*.cpp")
     add_packages("fmt", "doctest", "xtensor", "range-v3")
     if is_plat("linux") then
-        add_cxflags("-fconcepts", {force = true})
+        -- add_cxflags("-fconcepts", {force = true})
     elseif is_plat("windows") then
         add_cxflags("/W4 /WX /wd4819 /wd4127", {force = true})
     end
