@@ -26,7 +26,7 @@ using Arr2 = xt::xarray<double, xt::layout_type::row_major>;
  */
 EllStable::EllStable(double kappa, Arr2 mq, Arr1 xc)
     : n{xc.size()}, kappa{kappa}, mq{std::move(mq)}, xc_{std::move(xc)},
-      helper(n), no_defer_trick{false} {}
+      helper(double(n)), no_defer_trick{false} {}
 
 /**
  * @brief Construct a new EllStable object
