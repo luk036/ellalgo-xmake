@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/luk036/ellalgo-xmake/branch/master/graph/badge.svg?token=C9zdU6roDQ)](https://codecov.io/gh/luk036/ellalgo-xmake)
+
 # 🏉 ellalgo-xmake
 
 > Ellipsoid Method C++ Code
