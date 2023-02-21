@@ -17,6 +17,9 @@ target("EllAlgo")
     elseif is_plat("windows") then
         add_cxflags("/W4 /WX /wd4819 /wd4127", {force = true})
     end
+    if is_mode("coverage") then
+        add_cxflags("-ftest-coverage", "-fprofile-arcs", {force = true})
+    end
 
 target("test_ellalgo")
     set_kind("binary")
@@ -28,6 +31,9 @@ target("test_ellalgo")
         -- add_cxflags("-fconcepts", {force = true})
     elseif is_plat("windows") then
         add_cxflags("/W4 /WX /wd4819 /wd4127", {force = true})
+    end
+    if is_mode("coverage") then
+        add_cxflags("-ftest-coverage", "-fprofile-arcs", {force = true})
     end
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
