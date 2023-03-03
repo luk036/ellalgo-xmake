@@ -4,7 +4,6 @@
 #include <utility>  // for pair
 
 #include "ell_config.hpp"
-#include "py2cpp/range.hpp"
 
 /**
  * @brief Find a point in a convex set (defined through a cutting-plane oracle).
@@ -30,10 +29,11 @@
  * @return CInfo        Information of Cutting-plane method
  */
 template <typename Oracle, typename Space>
-requires OracleFeas<Oracle> && SearchSpace<Space, CutChoices<Oracle>>
-auto cutting_plane_feas(Oracle &omega, Space &ss, const Options &options)
-    -> CInfo {
-  for (auto niter : py::range(1, options.max_iter)) {
+  requires OracleFeas<Oracle> && SearchSpace<Space, CutChoices<Oracle>>
+                               auto cutting_plane_feas(Oracle &omega, Space &ss,
+                                                       const Options &options)
+                                   -> CInfo {
+  for (auto niter = 0U; niter < options.max_iter; ++niter) {
     const auto cut = omega.assess_feas(ss.xc()); // query the oracle at &ss.xc()
     if (!cut) {
       // feasible sol'n obtained
@@ -63,14 +63,16 @@ auto cutting_plane_feas(Oracle &omega, Space &ss, const Options &options)
  * @return Information of Cutting-plane method
  */
 template <typename Oracle, typename Space>
-requires OracleOptim<Oracle> && SearchSpace<Space, CutChoices<Oracle>>
-auto cutting_plane_optim(Oracle &omega, Space &ss, double &t,
-                         const Options &options)
-    -> std::tuple<std::optional<ArrayType<Oracle>>, size_t, CutStatus> {
+  requires OracleOptim<Oracle> &&
+           SearchSpace<Space, CutChoices<Oracle>>
+           auto cutting_plane_optim(Oracle &omega, Space &ss, double &t,
+                                    const Options &options)
+               -> std::tuple<std::optional<ArrayType<Oracle>>, size_t,
+                             CutStatus> {
   auto x_best = std::optional<ArrayType<Oracle>>{};
   auto status = CutStatus::NoSoln;
 
-  for (auto niter : py::range(1, options.max_iter)) {
+  for (auto niter = 0U; niter < options.max_iter; ++niter) {
     const auto [cut, shrunk] =
         omega.assess_optim(ss.xc(), t); // query the oracle at &ss.xc()
     if (shrunk) {
@@ -115,15 +117,17 @@ auto cutting_plane_optim(Oracle &omega, Space &ss, double &t,
  */
 // #[allow(dead_code)]
 template <typename Oracle, typename Space>
-requires OracleQ<Oracle> && SearchSpace<Space, CutChoices<Oracle>>
-auto cutting_plane_q(Oracle &omega, Space &ss, double &t,
-                     const Options &options)
-    -> std::tuple<std::optional<ArrayType<Oracle>>, size_t, CutStatus> {
+  requires OracleQ<Oracle> &&
+           SearchSpace<Space, CutChoices<Oracle>>
+           auto cutting_plane_q(Oracle &omega, Space &ss, double &t,
+                                const Options &options)
+               -> std::tuple<std::optional<ArrayType<Oracle>>, size_t,
+                             CutStatus> {
   auto x_best = std::optional<ArrayType<Oracle>>{};
   auto status = CutStatus::NoSoln; // note!!!
   auto retry = false;
 
-  for (auto niter : py::range(1, options.max_iter)) {
+  for (auto niter = 0U; niter < options.max_iter; ++niter) {
     const auto [cut, shrunk, x0, more_alt] =
         omega.assess_q(ss.xc(), t, retry); // query the oracle at &ss.xc()
     if (shrunk) {
@@ -160,14 +164,14 @@ auto cutting_plane_q(Oracle &omega, Space &ss, double &t,
  */
 // #[allow(dead_code)]
 template <typename T, typename Oracle>
-requires OracleBS<Oracle>
+  requires OracleBS<Oracle>
 auto bsearch(Oracle &omega, std::pair<T, T> &intvl, const Options &options)
     -> CInfo {
   auto &[lower, upper] = intvl;
   assert(lower <= upper);
   const auto u_orig = upper;
 
-  for (auto niter : py::range(1, options.max_iter)) {
+  for (auto niter = 0U; niter < options.max_iter; ++niter) {
     const auto tau = (upper - lower) / 2; // T may be an integer
     if (tau < options.tol) {
       return {upper != u_orig, niter, CutStatus::SmallEnough};

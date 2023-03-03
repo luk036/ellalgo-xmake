@@ -3,7 +3,6 @@
 #include <ellalgo/ell_config.hpp>      // for CutStatus, CutStatus::success
 #include <ellalgo/ell_stable.hpp>      // for ell, ell::Arr
 #include <optional>                    // for optional
-#include <py2cpp/range.hpp>            // for range
 #include <utility>                     // for pair
 #include <xtensor/xarray.hpp>          // for xarray_container
 #include <xtensor/xcontainer.hpp>      // for xcontainer
@@ -58,8 +57,8 @@ EllStable::EllStable(double alpha, Arr1 xc)
 auto EllStable::update_single(const Arr1 &grad, const double &beta)
     -> std::pair<CutStatus, double> {
   auto inv_ml_g = grad; // initial x0
-  for (auto i : py::range(this->n)) {
-    for (auto j : py::range(i)) {
+  for (auto i = 0U; i != this->n; ++i) {
+    for (auto j = 0U; j != i; ++j) {
       this->mq[{i, j}] = this->mq[{j, i}] * inv_ml_g[j];
       // keep for rank-one update
       inv_ml_g[i] -= this->mq[{i, j}];
@@ -67,13 +66,13 @@ auto EllStable::update_single(const Arr1 &grad, const double &beta)
   }
   // calculate inv(D)*inv(L)*grad: n
   auto inv_md_inv_ml_g = inv_ml_g; // initially
-  for (auto i : py::range(this->n)) {
+  for (auto i = 0U; i != this->n; ++i) {
     inv_md_inv_ml_g[i] *= this->mq[{i, i}];
   }
   // calculate omega: n
   auto g_mq_g = inv_md_inv_ml_g; // initially
   auto omega = 0.0;              // initially
-  for (auto i : py::range(this->n)) {
+  for (auto i = 0U; i != this->n; ++i) {
     g_mq_g[i] *= inv_ml_g[i];
     omega += g_mq_g[i];
   }
@@ -87,7 +86,7 @@ auto EllStable::update_single(const Arr1 &grad, const double &beta)
   // for (auto i : py::range((1, this->n).rev())) {
   for (auto i = this->n - 1; i != 0; --i) {
     // backward subsituition
-    for (auto j : py::range(i, this->n)) {
+    for (auto j = i; j != this->n; ++j) {
       mq_g[i - 1] -= this->mq[{i, j}] * mq_g[j]; // TODO
     }
   }
@@ -98,7 +97,7 @@ auto EllStable::update_single(const Arr1 &grad, const double &beta)
   const auto mu = this->helper.sigma / (1.0 - this->helper.sigma);
   auto oldt = omega / mu; // initially
   const auto m = this->n - 1;
-  for (auto j : py::range(m)) {
+  for (auto j = 0U; j != m; ++j) {
     // p=sqrt(k)*vv[j];
     // const auto p = inv_ml_g[j];
     // const auto mup = mu * p;
@@ -106,7 +105,7 @@ auto EllStable::update_single(const Arr1 &grad, const double &beta)
     // this->mq[{j, j}] /= t; // update invD
     const auto beta2 = inv_md_inv_ml_g[j] / t;
     this->mq[{j, j}] *= oldt / t; // update invD
-    for (auto l : py::range((j + 1), this->n)) {
+    for (auto l = j + 1; l != this->n; ++l) {
       // v(l) -= p * this->mq(j, l);
       this->mq(j, l) += beta2 * this->mq[{l, j}];
     }
@@ -139,8 +138,8 @@ auto EllStable::update_parallel(
     -> std::pair<CutStatus, double> {
   // const auto [grad, beta] = cut;
   auto inv_ml_g = grad; // initial x0
-  for (auto i : py::range(this->n)) {
-    for (auto j : py::range(i)) {
+  for (auto i = 0U; i != this->n; ++i) {
+    for (auto j = 0U; j != i; ++j) {
       this->mq[{i, j}] = this->mq[{j, i}] * inv_ml_g[j];
       // keep for rank-one update
       inv_ml_g[i] -= this->mq[{i, j}];
@@ -148,13 +147,13 @@ auto EllStable::update_parallel(
   }
   // calculate inv(D)*inv(L)*grad: n
   auto inv_md_inv_ml_g = inv_ml_g; // initially
-  for (auto i : py::range(this->n)) {
+  for (auto i = 0U; i != this->n; ++i) {
     inv_md_inv_ml_g[i] *= this->mq[{i, i}];
   }
   // calculate omega: n
   auto g_mq_g = inv_md_inv_ml_g; // initially
   auto omega = 0.0;              // initially
-  for (auto i : py::range(this->n)) {
+  for (auto i = 0U; i != this->n; ++i) {
     g_mq_g[i] *= inv_ml_g[i];
     omega += g_mq_g[i];
   }
@@ -173,7 +172,7 @@ auto EllStable::update_parallel(
   // for (auto i : py::range((1, this->n).rev())) {
   for (auto i = this->n - 1; i != 0; --i) {
     // backward subsituition
-    for (auto j : py::range(i, this->n)) {
+    for (auto j = i; j != this->n; ++j) {
       mq_g[i - 1] -= this->mq[{i, j}] * mq_g[j]; // TODO
     }
   }
@@ -184,7 +183,7 @@ auto EllStable::update_parallel(
   const auto mu = this->helper.sigma / (1.0 - this->helper.sigma);
   auto oldt = omega / mu; // initially
   const auto m = this->n - 1;
-  for (auto j : py::range(m)) {
+  for (auto j = 0U; j != m; ++j) {
     // p=sqrt(k)*vv[j];
     // const auto p = inv_ml_g[j];
     // const auto mup = mu * p;
@@ -192,7 +191,7 @@ auto EllStable::update_parallel(
     // this->mq[{j, j}] /= t; // update invD
     const auto beta2 = inv_md_inv_ml_g[j] / t;
     this->mq[{j, j}] *= oldt / t; // update invD
-    for (auto l : py::range((j + 1), this->n)) {
+    for (auto l = j + 1; l != this->n; ++l) {
       // v(l) -= p * this->mq(j, l);
       this->mq(j, l) += beta2 * this->mq[{l, j}];
     }

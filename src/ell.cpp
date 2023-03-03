@@ -3,7 +3,6 @@
 #include <ellalgo/ell_calc.hpp>        // for ell, ell::Arr
 #include <ellalgo/ell_config.hpp>      // for CutStatus, CutStatus::success
 #include <optional>                    // for optional
-#include <py2cpp/range.hpp>            // for range
 #include <utility>                     // for pair
 #include <xtensor/xarray.hpp>          // for xarray_container
 #include <xtensor/xcontainer.hpp>      // for xcontainer
@@ -59,8 +58,8 @@ auto Ell::update_single(const Arr1 &grad, const double &beta)
   // const auto [grad, beta] = cut;
   auto mq_g = Arr1{xt::zeros<double>({this->n})}; // initial x0
   auto omega = 0.0;
-  for (auto i : py::range(this->n)) {
-    for (auto j : py::range(this->n)) {
+  for (auto i = 0U; i != this->n; ++i) {
+    for (auto j = 0U; j != this->n; ++j) {
       mq_g[i] += this->mq[{i, j}] * grad[j];
     }
     omega += mq_g[i] * grad[i];
@@ -75,9 +74,9 @@ auto Ell::update_single(const Arr1 &grad, const double &beta)
   this->xc_ -= (this->helper.rho / omega) * mq_g; // n
 
   const auto r = this->helper.sigma / omega;
-  for (auto i : py::range(this->n)) {
+  for (auto i = 0U; i != this->n; ++i) {
     const auto r_mq_g = r * mq_g[i];
-    for (auto j : py::range(i)) {
+    for (auto j = 0U; j != i; ++j) {
       this->mq[{i, j}] -= r_mq_g * mq_g[j];
       this->mq[{j, i}] = this->mq[{i, j}];
     }
@@ -108,8 +107,8 @@ auto Ell::update_parallel(const Arr1 &grad,
   // const auto [grad, beta] = cut;
   auto mq_g = Arr1{xt::zeros<double>({this->n})}; // initial x0
   auto omega = 0.0;
-  for (auto i : py::range(this->n)) {
-    for (auto j : py::range(this->n)) {
+  for (auto i = 0U; i != this->n; ++i) {
+    for (auto j = 0U; j != this->n; ++j) {
       mq_g[i] += this->mq[{i, j}] * grad[j];
     }
     omega += mq_g[i] * grad[i];
@@ -129,9 +128,9 @@ auto Ell::update_parallel(const Arr1 &grad,
   // this->mq -= (this->sigma / omega) * xt::linalg::outer(mq_g, mq_g);
 
   const auto r = this->helper.sigma / omega;
-  for (auto i : py::range(this->n)) {
+  for (auto i = 0U; i != this->n; ++i) {
     const auto r_mq_g = r * mq_g[i];
-    for (auto j : py::range(i)) {
+    for (auto j = 0U; j != i; ++j) {
       this->mq[{i, j}] -= r_mq_g * mq_g[j];
       this->mq[{j, i}] = this->mq[{i, j}];
     }

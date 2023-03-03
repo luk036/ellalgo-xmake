@@ -2,7 +2,6 @@
 
 #include <ellalgo/cutting_plane.hpp>   // for cutting_plane_optim
 #include <ellalgo/ell.hpp>             // for ell
-#include <tuple>                       // for get, tuple
 #include <xtensor/xaccessible.hpp>     // for xconst_accessible
 #include <xtensor/xarray.hpp>          // for xarray_container
 #include <xtensor/xlayout.hpp>         // for layout_type, layout_type::row...
@@ -22,7 +21,7 @@ struct MyOracle {
    *
    * @param[in] z
    * @param[in,out] t
-   * @return std::tuple<Cut, double>
+   * @return std::pair<Cut, double>
    */
   auto assess_optim(const Arr1 &z, double &t) -> std::pair<Cut, bool> {
     const auto x = z[0];
