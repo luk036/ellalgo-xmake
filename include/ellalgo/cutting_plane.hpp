@@ -29,10 +29,11 @@
  * @return CInfo        Information of Cutting-plane method
  */
 template <typename Oracle, typename Space>
-  requires OracleFeas<Oracle> && SearchSpace<Space, CutChoices<Oracle>>
-                               auto cutting_plane_feas(Oracle &omega, Space &ss,
-                                                       const Options &options)
-                                   -> CInfo {
+#if __cpp_concepts >= 201907L
+  requires(OracleFeas<Oracle> && SearchSpace<Space, CutChoices<Oracle>>)
+#endif
+auto cutting_plane_feas(Oracle &omega, Space &ss, const Options &options)
+    -> CInfo {
   for (auto niter = 0U; niter < options.max_iter; ++niter) {
     const auto cut = omega.assess_feas(ss.xc()); // query the oracle at &ss.xc()
     if (!cut) {
@@ -63,12 +64,12 @@ template <typename Oracle, typename Space>
  * @return Information of Cutting-plane method
  */
 template <typename Oracle, typename Space>
-  requires OracleOptim<Oracle> &&
-           SearchSpace<Space, CutChoices<Oracle>>
-           auto cutting_plane_optim(Oracle &omega, Space &ss, double &t,
-                                    const Options &options)
-               -> std::tuple<std::optional<ArrayType<Oracle>>, size_t,
-                             CutStatus> {
+#if __cpp_concepts >= 201907L
+  requires(OracleOptim<Oracle> && SearchSpace<Space, CutChoices<Oracle>>)
+#endif
+auto cutting_plane_optim(Oracle &omega, Space &ss, double &t,
+                         const Options &options)
+    -> std::tuple<std::optional<ArrayType<Oracle>>, size_t, CutStatus> {
   auto x_best = std::optional<ArrayType<Oracle>>{};
   auto status = CutStatus::NoSoln;
 
@@ -117,12 +118,12 @@ template <typename Oracle, typename Space>
  */
 // #[allow(dead_code)]
 template <typename Oracle, typename Space>
-  requires OracleQ<Oracle> &&
-           SearchSpace<Space, CutChoices<Oracle>>
-           auto cutting_plane_q(Oracle &omega, Space &ss, double &t,
-                                const Options &options)
-               -> std::tuple<std::optional<ArrayType<Oracle>>, size_t,
-                             CutStatus> {
+#if __cpp_concepts >= 201907L
+  requires(OracleQ<Oracle> && SearchSpace<Space, CutChoices<Oracle>>)
+#endif
+auto cutting_plane_q(Oracle &omega, Space &ss, double &t,
+                     const Options &options)
+    -> std::tuple<std::optional<ArrayType<Oracle>>, size_t, CutStatus> {
   auto x_best = std::optional<ArrayType<Oracle>>{};
   auto status = CutStatus::NoSoln; // note!!!
   auto retry = false;
@@ -164,7 +165,9 @@ template <typename Oracle, typename Space>
  */
 // #[allow(dead_code)]
 template <typename T, typename Oracle>
+#if __cpp_concepts >= 201907L
   requires OracleBS<Oracle>
+#endif
 auto bsearch(Oracle &omega, std::pair<T, T> &intvl, const Options &options)
     -> CInfo {
   auto &[lower, upper] = intvl;
