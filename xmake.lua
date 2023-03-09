@@ -8,10 +8,13 @@ add_requires("range-v3", {alias = "range-v3"})
 set_languages("c++20")
 
 if is_plat("linux") then
+    set_warnings("all", "error")
+    add_cxflags("-Wconversion", {force = true})
     -- add_cxflags("-fconcepts", {force = true})
 elseif is_plat("windows") then
     add_cxflags("/W4 /WX /wd4819 /wd4127", {force = true})
 end
+
 if is_mode("coverage") then
     add_cxflags("-ftest-coverage", "-fprofile-arcs", {force = true})
 end

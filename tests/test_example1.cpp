@@ -48,6 +48,12 @@ struct MyOracle {
   }
 };
 
+TEST_CASE("xtensor") {
+  auto x = Arr1{};
+  CHECK(x == Arr1{});
+  CHECK_EQ(x, Arr1{});
+}
+
 TEST_CASE("Example 1, test feasible") {
   auto ell = Ell(Arr1{10.0, 10.0}, Arr1{0.0, 0.0});
   auto oracle = MyOracle{};
