@@ -26,5 +26,5 @@ jobs:
         run: |
           xmake --version
           xmake f -m debug -y
-          xmake
+          xmake -F xmake17.lua
           xmake run test_ellalgo
