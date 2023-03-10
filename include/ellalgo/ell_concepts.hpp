@@ -24,9 +24,11 @@ concept OracleFeas =
       typename Oracle::ArrayType;  // double for 1D; ndarray::Arr1 for general
       typename Oracle::CutChoices; // double for single cut; (double, double)
                                    // for parallel cut
-      {
-        omega.assess_feas(x)
-        } -> STD_ALT::convertible_to<std::optional<Cut<Oracle>>>;
+      // {
+      //   omega.assess_feas(x)
+      //   } -> STD_ALT::convertible_to<std::optional<Cut<Oracle>>> ||
+      //       STD_ALT::convertible_to<Cut<Oracle> *>;
+      { omega.assess_feas(x) };
     };
 
 /**

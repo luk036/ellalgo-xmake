@@ -4,6 +4,7 @@
 #include <utility> // for pair
 
 #include "ell_config.hpp"
+#include <tuple>
 
 /**
  * @brief Find a point in a convex set (defined through a cutting-plane oracle).
@@ -72,13 +73,13 @@ template <typename Oracle, typename Space>
 auto cutting_plane_optim(Oracle &omega, Space &ss, double &t,
                          const Options &options)
     -> std::tuple<ArrayType<Oracle>, size_t, CutStatus> {
-  auto x_best = ArrayType<Oracle>{};
+  ArrayType<Oracle> x_best{};
   auto status = CutStatus::NoSoln;
 
   for (auto niter = 0U; niter < options.max_iter; ++niter) {
     const auto assess =
         omega.assess_optim(ss.xc(), t); // query the oracle at &ss.xc()
-    const auto &cut = assess.first;
+    const auto cut = assess.first;
     const auto shrunk = assess.second;
     if (shrunk) {
       // best t obtained
@@ -89,13 +90,13 @@ auto cutting_plane_optim(Oracle &omega, Space &ss, double &t,
     const auto cutstatus = result.first;
     const auto tsq = result.second;
     if (cutstatus != CutStatus::Success) {
-      return {std::move(x_best), niter, cutstatus};
+      return std::make_tuple(std::move(x_best), niter, cutstatus);
     }
     if (tsq < options.tol) {
-      return {std::move(x_best), niter, CutStatus::SmallEnough};
+      return std::make_tuple(std::move(x_best), niter, CutStatus::SmallEnough);
     }
   }
-  return {std::move(x_best), options.max_iter, status};
+  return std::make_tuple(std::move(x_best), options.max_iter, status);
 } // END
 
 /**
@@ -151,18 +152,18 @@ auto cutting_plane_q(Oracle &omega, Space &ss, double &t,
     if (cutstatus == CutStatus::NoEffect) {
       if (!more_alt) {
         // more alt?
-        return {x_best, niter, status};
+        return {std::move(x_best), niter, status};
       }
       status = cutstatus;
       retry = true;
     } else if (cutstatus == CutStatus::NoSoln) {
-      return {x_best, niter, CutStatus::NoSoln};
+      return {std::move(x_best), niter, CutStatus::NoSoln};
     }
     if (tsq < options.tol) {
-      return {x_best, niter, CutStatus::SmallEnough};
+      return {std::move(x_best), niter, CutStatus::SmallEnough};
     }
   }
-  return {x_best, options.max_iter, status};
+  return {std::move(x_best), options.max_iter, status};
 } // END
 
 /**
