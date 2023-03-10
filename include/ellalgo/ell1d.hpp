@@ -30,7 +30,7 @@ public:
    *
    * @param[in] xc
    */
-  auto set_xc(double xc) { this->xc_ = xc; }
+  // auto set_xc(double xc) { this->xc_ = xc; }
 
   /**
    * @brief Update ellipsoid using the single cut
