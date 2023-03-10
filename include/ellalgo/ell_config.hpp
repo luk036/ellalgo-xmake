@@ -40,7 +40,4 @@ template <typename T> using RetQ = std::tuple<Cut<T>, bool, ArrayType<T>, bool>;
 
 #if __cpp_concepts >= 201907L
 #include "ell_concepts.hpp"
-#define REQUIRES(x) requires x
-#else
-#define REQUIRES(x) /* nothing */
 #endif

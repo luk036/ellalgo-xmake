@@ -102,7 +102,7 @@ auto Ell::update_single(const Arr1 &grad, const double &beta)
  * @return (i32, double)
  */
 auto Ell::update_parallel(const Arr1 &grad,
-                          const std::pair<double, std::optional<double>> &beta)
+                          const std::pair<double, double> &beta)
     -> std::pair<CutStatus, double> {
   // const auto [grad, beta] = cut;
   auto mq_g = Arr1{xt::zeros<double>({this->n})}; // initial x0
@@ -115,9 +115,12 @@ auto Ell::update_parallel(const Arr1 &grad,
   }
 
   this->helper.tsq = this->kappa * omega;
-  const auto [b0, b1_opt] = beta;
-  const auto status = b1_opt ? this->helper.calc_ll_core(b0, *b1_opt)
-                             : this->helper.calc_dc(b0);
+  // const auto [b0, b1_opt] = beta;
+  // const auto status = b1_opt ? this->helper.calc_ll_core(b0, *b1_opt)
+  //                            : this->helper.calc_dc(b0);
+  const auto b0 = beta.first;
+  const auto b1 = beta.second;
+  const auto status = this->helper.calc_ll_core(b0, b1);
   if (status != CutStatus::Success) {
     return {status, this->helper.tsq};
   }

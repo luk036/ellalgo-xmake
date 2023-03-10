@@ -83,7 +83,8 @@ public:
    */
   auto update(const std::pair<ArrayType, double> &cut)
       -> std::pair<CutStatus, double> {
-    const auto [grad, beta] = cut;
+    const auto &grad = cut.first;
+    const auto &beta = cut.second;
     return this->update_single(grad, beta);
   }
 };

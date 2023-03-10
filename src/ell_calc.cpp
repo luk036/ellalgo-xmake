@@ -14,7 +14,7 @@
 auto EllCalc::calc_ll_core(double b0, double b1) -> CutStatus {
   const auto b1sqn = b1 * (b1 / this->tsq);
   const auto t1n = 1.0 - b1sqn;
-  if (t1n < 0.0 || !this->use_parallel_cut) {
+  if (t1n <= 0.0 || !this->use_parallel_cut) {
     return this->calc_dc(b0);
   }
   const auto bdiff = b1 - b0;
