@@ -29,26 +29,26 @@ struct MyQuasicCvxOracle {
    */
   auto assess_optim(const Arr1 &z, double &t) -> std::pair<Cut, bool> {
 
-    auto sqrtx = z[0];
-    auto ly = z[1];
+    double sqrtx = z[0];
+    double ly = z[1];
 
     // constraint 1: exp(x) <= y, or sqrtx**2 <= ly
-    auto fj = sqrtx * sqrtx - ly;
+    double fj = sqrtx * sqrtx - ly;
     if (fj > 0.0) {
-      return {{Arr1{2 * sqrtx, -1.0}, fj}, false};
+      return std::make_pair(std::make_pair(Arr1{2 * sqrtx, -1.0}, fj), false);
     }
 
     // constraint 2: x - y >= 1
-    auto tmp2 = std::exp(ly);
-    auto tmp3 = t * tmp2;
+    double tmp2 = std::exp(ly);
+    double tmp3 = t * tmp2;
     fj = -sqrtx + tmp3;
     if (fj < 0.0) // feasible
     {
       t = sqrtx / tmp2;
-      return {{Arr1{-1.0, sqrtx}, 0}, true};
+      return std::make_pair(std::make_pair(Arr1{-1.0, sqrtx}, 0), true);
     }
 
-    return {{Arr1{-1.0, tmp3}, fj}, false};
+    return std::make_pair(std::make_pair(Arr1{-1.0, tmp3}, fj), false);
   }
 };
 
