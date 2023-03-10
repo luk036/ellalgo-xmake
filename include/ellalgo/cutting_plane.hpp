@@ -89,13 +89,13 @@ auto cutting_plane_optim(Oracle &omega, Space &ss, double &t,
     const auto cutstatus = result.first;
     const auto tsq = result.second;
     if (cutstatus != CutStatus::Success) {
-      return {x_best, niter, cutstatus};
+      return {std::move(x_best), niter, cutstatus};
     }
     if (tsq < options.tol) {
-      return {x_best, niter, CutStatus::SmallEnough};
+      return {std::move(x_best), niter, CutStatus::SmallEnough};
     }
   }
-  return {x_best, options.max_iter, status};
+  return {std::move(x_best), options.max_iter, status};
 } // END
 
 /**
