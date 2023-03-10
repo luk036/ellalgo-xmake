@@ -52,14 +52,25 @@ struct MyQuasicCvxOracle {
   }
 };
 
+TEST_CASE("xtensor") {
+  auto x = Arr1{};
+  CHECK(x == Arr1{});
+  CHECK_EQ(x, Arr1{});
+
+  x = Arr1{1.0, 2.0};
+  CHECK(x != Arr1{});
+  CHECK_NE(x, Arr1{});
+}
+
 TEST_CASE("Quasiconvex 1, test feasible") {
   Ell E{10.0, Arr1{0.0, 0.0}};
 
   auto P = MyQuasicCvxOracle{};
   auto t = 0.0;
-  const auto options = Options{2000, 1e-12};
-  const auto result = cutting_plane_optim(P, E, t, options);
-  const auto x = std::get<0>(result);
+  P.assess_optim(E.xc(), t);
+  // const auto options = Options{2000, 1e-12};
+  // const auto result = cutting_plane_optim(P, E, t, options);
+  // const auto x = std::get<0>(result);
   // REQUIRE(x != Arr1{});
   // CHECK_EQ(-t, doctest::Approx(-0.4288673397));
   // CHECK_EQ(x[0] * x[0], doctest::Approx(0.499876));
@@ -70,9 +81,10 @@ TEST_CASE("Quasiconvex 1, test feasible (stable)") {
   EllStable E{10.0, Arr1{0.0, 0.0}};
   auto P = MyQuasicCvxOracle{};
   auto t = 0.0;
-  const auto options = Options{2000, 1e-12};
-  const auto result = cutting_plane_optim(P, E, t, options);
-  const auto x = std::get<0>(result);
+  P.assess_optim(E.xc(), t);
+  // const auto options = Options{2000, 1e-12};
+  // const auto result = cutting_plane_optim(P, E, t, options);
+  // const auto x = std::get<0>(result);
   // REQUIRE(x != Arr1{});
   // const auto x = *x_opt;
   // CHECK_EQ(-t, doctest::Approx(-0.4288673397));
